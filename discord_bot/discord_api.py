@@ -3,23 +3,29 @@ import os
 import discord
 from dotenv import load_dotenv
 
+# import function from our file
 from chatgpt_ai.openai import chatgpt_response
 
+# load keys and tokens from .env file
 load_dotenv()
 
+# get token from .env file
 discord_token = os.getenv('DISCORD_TOKEN')
 
 
 class MyClient(discord.Client):
+    # print a message when the bot is logged in the channel
     async def on_ready(self):
         print("Successfully logged in as: ", self.user)
 
     async def on_message(self, message):
         print(message.content)
+        # making sure the bot does not loop talking to itself
         if message.author == self.user:
             return
         command, user_message = None, None
 
+        # prefix for the bot command
         for text in ['/ai', '/bot', '/chatgpt']:
             if message.content.startswith(text):
                 command = message.content.split(' ')[0]
